@@ -38,10 +38,12 @@ jobs:
       - run: 
           name: Install npm dependencies
           command: npm install
+      - run: bash build-cache-files.sh
       - save_cache:
           key: v1-jest-boilerplate-{{ .Branch }}-{{ checksum "package-lock.json" }}
           paths:
             - /home/circleci/project/node_modules
+            - /home/circleci/project/dist/build.txt
       - run: 
           name: Run npm tests
           command: npm run test:jest
