@@ -1,16 +1,46 @@
 version: 2.1
 
-jobs:
-  jest-tests:
+executors:
+  cimg-node:
     docker:
       - image: cimg/node:18.18
-    resource_class: medium+
+    resource_class: medium
+
+jobs:
+  jest-tests-no-caching:
+    executor: cimg-node
+    steps:
+  jest-tests-caching-enabled:
+    executor: cimg-node
     steps:
       - checkout
-      - run: npm install
-      - run: npm run test:jest
+      - run: 
+          name: Install npm dependencies
+          command: npm install
+      - run: 
+          name: Run npm tests
+          command: npm run test:jest
+
+  jest-tests-caching-enabled:
+    executor: cimg-node
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - v1-jest-boilerplate-{{ .Branch }}
+      - run: 
+          name: Install npm dependencies
+          command: npm install
+      - save_cache:
+          key: v1-jest-boilerplate-{{ .Branch }}
+          paths:
+            - /home/circleci/project/node_modules
+      - run: 
+          name: Run npm tests
+          command: npm run test:jest
 
 workflows:
   nodejs:
     jobs:
-      - jest-tests
+      - jest-tests-caching-enabled
+      - jest-tests-no-caching
