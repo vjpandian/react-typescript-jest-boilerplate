@@ -5,10 +5,17 @@ executors:
     docker:
       - image: cimg/node:18.18
     resource_class: medium
+  linux-vm:
+    machine:
+      image: ubuntu-2404:current
+    resource_class: medium
 
 jobs:
   jest-tests-no-caching:
-    executor: cimg-node
+    executor: <<parameters.os>>
+    parameters:
+      os:
+        type: executor
     steps:
       - checkout
       - run: 
@@ -19,17 +26,20 @@ jobs:
           command: npm run test:jest
 
   jest-tests-caching-enabled:
-    executor: cimg-node
+    executor: <<parameters.os>>
+    parameters:
+      os:
+        type: executor
     steps:
       - checkout
       - restore_cache:
           keys:
-            - v1-jest-boilerplate-{{ .Branch }}
+            - v1-jest-boilerplate-{{ .Branch }}-{{ checksum "package-lock.json" }}
       - run: 
           name: Install npm dependencies
           command: npm install
       - save_cache:
-          key: v1-jest-boilerplate-{{ .Branch }}
+          key: v1-jest-boilerplate-{{ .Branch }}-{{ checksum "package-lock.json" }}
           paths:
             - /home/circleci/project/node_modules
       - run: 
@@ -39,5 +49,11 @@ jobs:
 workflows:
   nodejs:
     jobs:
-      - jest-tests-caching-enabled
-      - jest-tests-no-caching
+      - jest-tests-caching-enabled:
+            matrix:
+              parameters:
+                 os: [cimg-node, linux-vm]
+      - jest-tests-no-caching:
+            matrix:
+              parameters:
+                 os: [cimg-node, linux-vm]
