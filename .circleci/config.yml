@@ -44,7 +44,7 @@ jobs:
           key: v1-jest-boilerplate-{{ .Branch }}-{{ checksum "package-lock.json" }}
           paths:
             - /home/circleci/project/node_modules
-            - /home/circleci/project/dist/build.txt
+            - /home/circleci/project/dist
       - run: 
           name: Run npm tests
           command: npm run test:jest
