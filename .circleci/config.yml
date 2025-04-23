@@ -1,0 +1,16 @@
+version: 2.1
+
+jobs:
+  jest-tests:
+    docker:
+      - image: cimg/node:18.18
+    resource_class: medium
+    steps:
+      - checkout
+      - run: npm install
+      - run: npm run test:jest
+
+workflows:
+  nodejs:
+    jobs:
+      - jest-tests
