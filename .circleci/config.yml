@@ -50,12 +50,14 @@ jobs:
           command: npm run test:jest
 
 workflows:
-  nodejs:
+  caching:
     jobs:
       - jest-tests-caching-enabled:
             matrix:
               parameters:
                  os: [cimg-node, linux-vm]
+  no-caching:
+    jobs:
       - jest-tests-no-caching:
             matrix:
               parameters:
