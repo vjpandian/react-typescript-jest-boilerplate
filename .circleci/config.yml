@@ -35,13 +35,13 @@ jobs:
       - checkout
       - restore_cache:
           keys:
-            - v1-jest-boilerplate-{{ .Branch }}-{{ checksum "package-lock.json" }}
+            - v2-jest-boilerplate-{{ .Branch }}-{{ checksum "package-lock.json" }}
       - run: 
           name: Install npm dependencies
           command: npm install
       - run: bash scripts/build-cache-file.sh
       - save_cache:
-          key: v1-jest-boilerplate-{{ .Branch }}-{{ checksum "package-lock.json" }}
+          key: v2-jest-boilerplate-{{ .Branch }}-{{ checksum "package-lock.json" }}
           paths:
             - /home/circleci/project/node_modules
             - /home/circleci/project/dist
