@@ -10,9 +10,6 @@ jobs:
   jest-tests-no-caching:
     executor: cimg-node
     steps:
-  jest-tests-caching-enabled:
-    executor: cimg-node
-    steps:
       - checkout
       - run: 
           name: Install npm dependencies
