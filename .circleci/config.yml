@@ -38,7 +38,7 @@ jobs:
       - run: 
           name: Install npm dependencies
           command: npm install
-      - run: bash build-cache-files.sh
+      - run: bash scripts/build-cache-files.sh
       - save_cache:
           key: v1-jest-boilerplate-{{ .Branch }}-{{ checksum "package-lock.json" }}
           paths:
